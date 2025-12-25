@@ -31,31 +31,34 @@ h1 {
 }
 
 .question {
-  font-size: 1.5em;
-  margin: 20px 0;
+  font-size: 6em; /* 4x lipat dari 1.5em */
+  font-weight: bold;
+  margin: 40px 0;
 }
 
 input[type="number"] {
-  padding: 10px;
-  font-size: 1em;
-  width: 120px;
-  border: 2px solid var(--accent-color);
-  border-radius: 5px;
+  padding: 15px;
+  font-size: 2em;
+  width: 180px;
+  border: 3px solid var(--accent-color);
+  border-radius: 10px;
   background: var(--accent-color);
   font-family: 'Amanda', sans-serif;
   transition: box-shadow 0.3s;
+  font-weight: bold;
 }
 
 button {
-  padding: 10px 20px;
-  font-size: 1em;
-  margin-top: 10px;
+  padding: 15px 25px;
+  font-size: 2em;
+  margin-top: 20px;
   cursor: pointer;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   background: var(--accent-color);
   font-family: 'Amanda', sans-serif;
   transition: box-shadow 0.3s;
+  font-weight: bold;
 }
 
 button:hover {
@@ -63,14 +66,15 @@ button:hover {
 }
 
 #timer {
-  font-size: 1.2em;
+  font-size: 3em;
   margin-bottom: 20px;
   color: #f57f17;
+  font-weight: bold;
 }
 
 #score {
-  margin-top: 20px;
-  font-size: 1.5em;
+  margin-top: 30px;
+  font-size: 3em;
   font-weight: bold;
 }
 </style>
@@ -112,10 +116,8 @@ function generateQuestions() {
   let qs = [];
   for(let i=0;i<totalQuestions;i++){
     let op = ops[Math.floor(Math.random()*ops.length)];
-    let a = Math.floor(Math.random() * 10 * difficulty/10) + 1;
-    let b = Math.floor(Math.random() * 10 * difficulty/10) + 1;
-    if(a > 10) a = 10;
-    if(b > 10) b = 10;
+    let a = Math.floor(Math.random() * 9) + 2; // 2-10
+    let b = Math.floor(Math.random() * 9) + 2; // 2-10
     let questionText, answer;
 
     switch(op){
@@ -137,12 +139,12 @@ function generateQuestions() {
         answer = a;
         break;
       case '+':
-        questionText = `${Math.pow(a,2)} + ${Math.pow(b,2)} = ?`;
-        answer = Math.pow(a,2) + Math.pow(b,2);
+        questionText = `${a} + ${b} = ?`;
+        answer = a + b;
         break;
       case '-':
-        questionText = `${Math.pow(a,2)} - ${Math.pow(b,2)} = ?`;
-        answer = Math.pow(a,2) - Math.pow(b,2);
+        questionText = `${a} - ${b} = ?`;
+        answer = a - b;
         break;
     }
     qs.push({questionText, answer});
@@ -167,7 +169,7 @@ function showQuestion(){
 
 function flashEffect(color){
   document.body.style.background = color;
-  setTimeout(()=> document.body.style.background = '#fff9c4', 300);
+  setTimeout(()=> document.body.style.background = '#fff9c4', 500);
 }
 
 function nextQuestion(){
@@ -178,9 +180,9 @@ function nextQuestion(){
     let userAnswer = Number(document.getElementById('answer').value);
     if(userAnswer === questions[currentQuestion-1].answer){
       score++;
-      flashEffect('#a5d6a7'); // hijau
+      flashEffect('#a5d6a7'); // hijau jika benar
     } else {
-      flashEffect('#ff8a80'); // merah
+      flashEffect('#ff8a80'); // merah jika salah
     }
   }
   currentQuestion++;
@@ -197,11 +199,4 @@ function endQuiz(){
 </script>
 
 </body>
-</html>  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('score').innerText = `Skor Anda: ${score} / ${totalQuestions}`;
-}
-</script>
-
-</body>
-
 </html>
