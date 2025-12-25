@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Matematika</title>
+
+<!-- Import font Daydream dan Amanda -->
+<link href="https://fonts.googleapis.com/css2?family=Daydream&family=Amanda&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-color: #fff9c4; /* kuning muda */
+    --accent-color: #c8e6c9; /* hijau muda */
+    --text-color: #333;
+  }
+
+  body {
+    font-family: 'Amanda', Arial, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1 {
+    font-family: 'Daydream', cursive;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .question {
+    font-size: 1.5em;
+    margin: 20px 0;
+    font-family: 'Amanda', sans-serif;
+  }
+
+  input[type="number"] {
+    padding: 10px;
+    font-size: 1em;
+    width: 120px;
+    border: 2px solid var(--accent-color);
+    border-radius: 5px;
+    background: var(--accent-color);
+    font-family: 'Amanda', sans-serif;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    margin-top: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background: var(--accent-color);
+    font-family: 'Amanda', sans-serif;
+  }
+
+  button:hover {
+    background: #a5d6a7;
+  }
+
+  #timer {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    color: #f57f17;
+  }
+
+  #score {
+    margin-top: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+
+</style>
+</head>
+<body>
+
+<h1>Quiz Matematika</h1>
+<div id="timer">Waktu tersisa: 05:00</div>
+<div class="question" id="question">Klik "Mulai" untuk memulai quiz</div>
+<input type="number" id="answer" placeholder="Jawaban" />
+<br>
+<button onclick="nextQuestion()" id="nextBtn">Mulai</button>
+<div id="score"></div>
+
+<script>
+const totalQuestions = 20;
+let currentQuestion = 0;
+let score = 0;
+let questions = [];
+let timer;
+let timeLeft = 300; // 5 menit = 300 detik
+
+function startTimer() {
+  timer = setInterval(() => {
+    timeLeft--;
+    let minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+    let seconds = String(timeLeft % 60).padStart(2, '0');
+    document.getElementById('timer').innerText = `Waktu tersisa: ${minutes}:${seconds}`;
+    if (timeLeft <= 0) {
+      clearInterval(timer);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function generateQuestions() {
+  const ops = ['*','/','^','sqrt','+','-'];
+  let qs = [];
+  for (let i = 0; i < totalQuestions; i++) {
+    let op = ops[Math.floor(Math.random() * ops.length)];
+    let a = Math.floor(Math.random() * 10) + 1;
+    let b = Math.floor(Math.random() * 10) + 1;
+    let questionText, answer;
+    
+    switch(op) {
+      case '*':
+        questionText = `${a} × ${b} = ?`;
+        answer = a * b;
+        break;
+      case '/':
+        questionText = `${a*b} ÷ ${a} = ?`;
+        answer = b;
+        break;
+      case '^':
+        questionText = `${a}^${b} = ?`;
+        answer = Math.pow(a, b);
+        break;
+      case 'sqrt':
+        answer = Math.pow(a, 2);
+        questionText = `√${answer} = ?`;
+        answer = a;
+        break;
+      case '+':
+        questionText = `${Math.pow(a,2)} + ${Math.pow(b,2)} = ?`;
+        answer = Math.pow(a,2) + Math.pow(b,2);
+        break;
+      case '-':
+        questionText = `${Math.pow(a,2)} - ${Math.pow(b,2)} = ?`;
+        answer = Math.pow(a,2) - Math.pow(b,2);
+        break;
+    }
+    qs.push({questionText, answer});
+  }
+  return qs;
+}
+
+function showQuestion() {
+  if (currentQuestion < totalQuestions) {
+    document.getElementById('question').innerText = questions[currentQuestion].questionText;
+    document.getElementById('answer').value = '';
+    document.getElementById('answer').focus();
+    document.getElementById('nextBtn').innerText = 'Jawab';
+  } else {
+    endQuiz();
+  }
+}
+
+function nextQuestion() {
+  if(currentQuestion === 0){
+    questions = generateQuestions();
+    startTimer();
+  } else {
+    let userAnswer = Number(document.getElementById('answer').value);
+    if(userAnswer === questions[currentQuestion-1].answer) score++;
+  }
+  currentQuestion++;
+  showQuestion();
+}
+
+function endQuiz() {
+  clearInterval(timer);
+  document.getElementById('question').innerText = 'Quiz selesai!';
+  document.getElementById('answer').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('score').innerText = `Skor Anda: ${score} / ${totalQuestions}`;
+}
+</script>
+
+</body>
+</html>
